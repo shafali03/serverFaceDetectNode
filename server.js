@@ -12,10 +12,8 @@ const image = require('./controllers/image');
 const db = knex({
     client: 'pg',
     connection: {
-        host: '127.0.0.1',
-        user: 'postgres',
-        password: 'ali110614shaf',
-        database: 'smartbrain'
+        host: 'process.env.DATABASE_URL',
+        ssl: true,
     }
 });
 
@@ -37,20 +35,20 @@ app.get('/', (req, res) => {
 
 
 app.get('/', (req, res) => { res.send('it is working') })
-//signIn
+
 app.post('/signin', signin.handleSignin(db, bcrypt))
-//register to push to add to the user array
+
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })
-//Profile
+
 app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) })
-//image
+
 app.put('/image', (req, res) => { image.handleImage(req, res, db) })
 
 app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) })
 
 
-app.listen(3000, () => {
-    console.log('apps is running on port 3000');
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`apps is running on port ${process.env.PORT}`);
 })
 
 
